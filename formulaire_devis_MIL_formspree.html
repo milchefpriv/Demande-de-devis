@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande de devis - MIL</title>
+<style>
+    *{box-sizing:border-box}
+    body{
+        margin:0;
+        font-family:Arial, Helvetica, sans-serif;
+        background:#f5f3ef;
+        color:#1d1d1d;
+    }
+    .wrap{
+        max-width:1080px;
+        margin:40px auto;
+        padding:0 20px;
+    }
+    .card{
+        background:#fff;
+        border-radius:20px;
+        box-shadow:0 12px 35px rgba(0,0,0,.08);
+        overflow:hidden;
+    }
+    .hero{
+        padding:42px 40px 24px;
+        background:linear-gradient(180deg,#ffffff 0%, #f8f6f2 100%);
+        border-bottom:1px solid #ece7df;
+    }
+    .hero h1{
+        margin:0 0 10px;
+        font-size:34px;
+        line-height:1.05;
+        letter-spacing:-0.02em;
+    }
+    .hero p{
+        margin:0;
+        color:#5d5b58;
+        line-height:1.6;
+        max-width:760px;
+    }
+    form{
+        padding:34px 40px 42px;
+    }
+    .section{
+        margin-bottom:34px;
+    }
+    .section h2{
+        font-size:19px;
+        margin:0 0 14px;
+        padding-bottom:10px;
+        border-bottom:1px solid #ece7df;
+    }
+    .section-note{
+        margin:-6px 0 14px;
+        color:#6d6b67;
+        font-size:13px;
+        line-height:1.5;
+    }
+    .grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:18px;
+    }
+    .full{grid-column:1 / -1}
+    label{
+        display:block;
+        font-weight:700;
+        margin-bottom:7px;
+        font-size:14px;
+    }
+    input,select,textarea{
+        width:100%;
+        border:1px solid #d8d1c8;
+        border-radius:12px;
+        padding:14px 15px;
+        font-size:15px;
+        background:#fff;
+        color:#1d1d1d;
+        outline:none;
+        transition:.18s ease;
+    }
+    input:focus,select:focus,textarea:focus{
+        border-color:#8d7f68;
+        box-shadow:0 0 0 3px rgba(141,127,104,.12);
+    }
+    textarea{
+        min-height:120px;
+        resize:vertical;
+    }
+    .choice-box{
+        display:grid;
+        gap:10px;
+        padding:14px;
+        border:1px solid #e0d9d0;
+        border-radius:14px;
+        background:#fbfaf8;
+    }
+    .choice-box label{
+        font-weight:500;
+        display:flex;
+        gap:10px;
+        align-items:flex-start;
+        margin:0;
+        line-height:1.45;
+    }
+    input[type="checkbox"], input[type="radio"]{
+        width:auto;
+        margin-top:3px;
+        accent-color:#111;
+    }
+    .estimate{
+        margin-top:18px;
+        padding:20px 22px;
+        background:#111;
+        color:#fff;
+        border-radius:16px;
+    }
+    .estimate .small{
+        display:block;
+        font-size:13px;
+        opacity:.78;
+        margin-bottom:6px;
+    }
+    .estimate strong{
+        font-size:31px;
+        letter-spacing:-0.02em;
+    }
+    .actions{
+        display:flex;
+        flex-direction:column;
+        gap:12px;
+        margin-top:8px;
+    }
+    button{
+        appearance:none;
+        border:none;
+        border-radius:14px;
+        background:#111;
+        color:#fff;
+        padding:18px 22px;
+        font-size:16px;
+        font-weight:700;
+        cursor:pointer;
+        transition:.18s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    .sub{
+        color:#6b6966;
+        font-size:13px;
+        line-height:1.5;
+    }
+    .hidden{display:none !important}
+    .success{
+        padding:36px 40px 42px;
+    }
+    .success h2{
+        margin:0 0 10px;
+        font-size:28px;
+    }
+    .success p{
+        margin:0 0 12px;
+        line-height:1.6;
+        color:#55524f;
+    }
+    .badge{
+        display:inline-block;
+        background:#f1ece4;
+        color:#3a3328;
+        border-radius:999px;
+        padding:8px 12px;
+        font-size:13px;
+        font-weight:700;
+        margin-bottom:16px;
+    }
+    .dev-note{
+        margin:18px 0 0;
+        padding:14px 16px;
+        border-radius:12px;
+        background:#fff8e7;
+        border:1px solid #ead8a6;
+        color:#5e4d1a;
+        font-size:13px;
+        line-height:1.5;
+    }
+    @media (max-width: 760px){
+        .hero, form, .success{padding:26px 22px}
+        .grid{grid-template-columns:1fr}
+        .hero h1{font-size:28px}
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="hero">
+            <h1>Demande de devis — MIL</h1>
+            <p>
+                Décrivez votre événement et les prestations souhaitées. Le formulaire est prêt à être branché à un service d’envoi.
+                Le formulaire est prêt à envoyer les demandes de devis.
+            </p>
+            <div class="dev-note">
+                
+            </div>
+        </div>
+
+        <form id="quoteForm" action="https://formspree.io/f/xeevgogy" method="POST">
+            <input type="hidden" name="_subject" value="Nouvelle demande de devis - MIL">
+            <input type="hidden" name="_language" value="fr">
+            <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off">
+
+            <div class="section">
+                <h2>Vos coordonnées</h2>
+                <div class="grid">
+                    <div>
+                        <label for="clientType">Vous êtes</label>
+                        <select id="clientType" name="client_type" required>
+                            <option value="Particulier">Particulier</option>
+                            <option value="Entreprise">Entreprise</option>
+                        </select>
+                    </div>
+
+                    <div id="companyField" class="hidden">
+                        <label for="companyName">Nom de l’entreprise</label>
+                        <input id="companyName" type="text" name="company_name" placeholder="Nom de la société">
+                    </div>
+
+                    <div id="sirenField" class="hidden">
+                        <label for="siren">SIREN</label>
+                        <input id="siren" type="text" name="siren" placeholder="123 456 789">
+                    </div>
+
+                    <div>
+                        <label for="fullName">Nom complet</label>
+                        <input id="fullName" type="text" name="full_name" placeholder="Votre nom" required>
+                    </div>
+
+                    <div>
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" placeholder="vous@email.com" required>
+                    </div>
+
+                    <div>
+                        <label for="phone">Téléphone</label>
+                        <input id="phone" type="tel" name="phone" placeholder="06 00 00 00 00" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Informations sur l’événement</h2>
+                <div class="grid">
+                    <div>
+                        <label for="eventType">Type d’événement</label>
+                        <select id="eventType" name="event_type" required>
+                            <option value="Dîner privé">Dîner privé</option>
+                            <option value="Buffet">Buffet</option>
+                            <option value="Cocktail / Vernissage">Cocktail / Vernissage</option>
+                            <option value="Pop-up">Pop-up</option>
+                            <option value="Séminaire">Séminaire</option>
+                            <option value="Anniversaire">Anniversaire</option>
+                            <option value="Mariage">Mariage</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="guests">Nombre de convives</label>
+                        <input id="guests" type="number" name="guest_count" min="1" value="20" required>
+                    </div>
+
+                    <div>
+                        <label for="eventDate">Date souhaitée</label>
+                        <input id="eventDate" type="date" name="event_date" required>
+                    </div>
+
+                    <div>
+                        <label for="eventTime">Horaires estimés</label>
+                        <input id="eventTime" type="text" name="event_time" placeholder="Ex : 18h – 23h">
+                    </div>
+
+                    <div class="full">
+                        <label for="eventLocation">Lieu de l’événement</label>
+                        <input id="eventLocation" type="text" name="event_location" placeholder="Adresse complète ou indiquez si vous souhaitez Lespace 63">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Prestation souhaitée</h2>
+                <p class="section-note">Sélectionnez une ou plusieurs prestations.</p>
+                <div class="choice-box">
+                    <label><input type="checkbox" name="services[]" value="Livraison buffet uniquement"> Livraison buffet uniquement</label>
+                    <label><input type="checkbox" name="services[]" value="Chef à domicile"> Chef à domicile</label>
+                    <label><input type="checkbox" name="services[]" value="Dîner servi à table"> Dîner servi à table</label>
+                    <label><input type="checkbox" name="services[]" value="Cocktail / pièces apéritives"> Cocktail / pièces apéritives</label>
+                    <label><input type="checkbox" name="services[]" value="Utilisation de Lespace 63"> Utilisation de Lespace 63</label>
+                    <label><input type="checkbox" name="services[]" value="Personnel de service"> Personnel de service</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Formule MIL</h2>
+                <div class="grid">
+                    <div>
+                        <label for="formula">Choix de formule</label>
+                        <select id="formula" name="formula">
+                            <option value="0">Sur mesure</option>
+                            <option value="40">Dîner Convivial — 40 € / personne</option>
+                            <option value="110">Dîner en Galerie — 110 € / personne</option>
+                            <option value="22">Cocktail Formule 1 — 22 € / personne</option>
+                            <option value="28">Cocktail Formule 2 — 28 € / personne</option>
+                            <option value="36">Cocktail Formule 3 — 36 € / personne</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="budgetMode">Mode de budget</label>
+                        <select id="budgetMode" name="budget_mode">
+                            <option value="Budget par personne">Budget par personne</option>
+                            <option value="Budget global">Budget global</option>
+                        </select>
+                    </div>
+
+                    <div class="full">
+                        <label for="budget">Budget estimé</label>
+                        <input id="budget" type="text" name="budget" placeholder="Ex : 45 € / personne ou 1200 €">
+                    </div>
+                </div>
+
+                <div class="estimate">
+                    <span class="small">Estimation automatique selon la formule sélectionnée</span>
+                    <strong id="estimateValue">800 €</strong>
+                    <input type="hidden" name="auto_estimate" id="autoEstimateField" value="800 €">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Cuisine et préférences</h2>
+                <div class="grid">
+                    <div>
+                        <label for="cateringType">Type de restauration</label>
+                        <select id="cateringType" name="catering_type">
+                            <option value="Buffet froid">Buffet froid</option>
+                            <option value="Buffet chaud">Buffet chaud</option>
+                            <option value="Street food">Street food</option>
+                            <option value="Cocktail dînatoire">Cocktail dînatoire</option>
+                            <option value="Repas gastronomique">Repas gastronomique</option>
+                            <option value="Brunch">Brunch</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="culinaryStyle">Style culinaire souhaité</label>
+                        <input id="culinaryStyle" type="text" name="culinary_style" placeholder="Libanais, italien, gastronomique, végétarien…">
+                    </div>
+
+                    <div class="full">
+                        <label for="dietaryNeeds">Allergies, restrictions ou demandes particulières</label>
+                        <textarea id="dietaryNeeds" name="dietary_requirements" placeholder="Allergies, régime, besoin de menu végétarien, sans gluten, halal, etc."></textarea>
+                    </div>
+
+                    <div class="full">
+                        <label for="drinks">Boissons souhaitées</label>
+                        <textarea id="drinks" name="drinks" placeholder="Vin, cocktails, softs, champagne, pas de boissons, etc."></textarea>
+                    </div>
+
+                    <div class="full">
+                        <label for="description">Description de votre événement</label>
+                        <textarea id="description" name="event_description" placeholder="Décrivez l’ambiance, le type de convives, le déroulé, vos attentes, votre univers ou toute autre information utile."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Services complémentaires</h2>
+                <div class="choice-box">
+                    <label><input type="checkbox" name="extras[]" value="Mobilier / tables / mange-debout"> Mobilier / tables / mange-debout</label>
+                    <label><input type="checkbox" name="extras[]" value="Vaisselle et verrerie"> Vaisselle et verrerie</label>
+                    <label><input type="checkbox" name="extras[]" value="Décoration / scénographie"> Décoration / scénographie</label>
+                    <label><input type="checkbox" name="extras[]" value="Ménage"> Ménage</label>
+                    <label><input type="checkbox" name="extras[]" value="Régisseur"> Régisseur</label>
+                    <label><input type="checkbox" name="extras[]" value="Son / musique / vidéoprojecteur"> Son / musique / vidéoprojecteur</label>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" id="submitBtn">Envoyer ma demande de devis</button>
+                <div class="sub">
+                    Une fois branché à Formspree, le formulaire enverra les demandes à votre adresse email.
+                </div>
+            </div>
+        </form>
+
+        <div id="successMessage" class="success hidden">
+            <div class="badge">Demande envoyée</div>
+            <h2>Merci, votre demande a bien été transmise.</h2>
+            <p>Nous reviendrons vers vous avec une proposition adaptée à votre événement.</p>
+            <p>Vous pouvez fermer cette page ou revenir au formulaire.</p>
+            <button type="button" id="backBtn">Revenir au formulaire</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const clientType = document.getElementById('clientType');
+const companyField = document.getElementById('companyField');
+const sirenField = document.getElementById('sirenField');
+const companyName = document.getElementById('companyName');
+const siren = document.getElementById('siren');
+
+const formula = document.getElementById('formula');
+const guests = document.getElementById('guests');
+const estimateValue = document.getElementById('estimateValue');
+const autoEstimateField = document.getElementById('autoEstimateField');
+
+const form = document.getElementById('quoteForm');
+const submitBtn = document.getElementById('submitBtn');
+const successMessage = document.getElementById('successMessage');
+const backBtn = document.getElementById('backBtn');
+
+function toggleCompanyFields() {
+    const isCompany = clientType.value === 'Entreprise';
+    companyField.classList.toggle('hidden', !isCompany);
+    sirenField.classList.toggle('hidden', !isCompany);
+    companyName.required = isCompany;
+    siren.required = false;
+}
+clientType.addEventListener('change', toggleCompanyFields);
+toggleCompanyFields();
+
+function updateEstimate() {
+    const price = parseInt(formula.value || '0', 10);
+    const people = parseInt(guests.value || '0', 10);
+    const result = price > 0 && people > 0
+        ? (price * people).toLocaleString('fr-FR') + ' €'
+        : 'Sur devis';
+    estimateValue.textContent = result;
+    autoEstimateField.value = result;
+}
+formula.addEventListener('change', updateEstimate);
+guests.addEventListener('input', updateEstimate);
+updateEstimate();
+
+form.addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    if (form.action.includes('TON_ID_FORM')) {
+        alert("Le formulaire n’est pas correctement configuré.");
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi en cours...';
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            form.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            alert("Erreur d’envoi. Vérifie l’endpoint Formspree ou réessaie.");
+        }
+    } catch (error) {
+        alert("Erreur réseau. Réessaie.");
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer ma demande de devis';
+    }
+});
+
+backBtn.addEventListener('click', function(){
+    successMessage.classList.add('hidden');
+    form.classList.remove('hidden');
+});
+</script>
+</body>
+</html>
