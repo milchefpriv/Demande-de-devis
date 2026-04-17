@@ -1,472 +1,1305 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Demande de devis - MIL</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demande de devis — MIL</title>
+  <meta name="description" content="Formulaire de demande de devis MIL" />
+  <style>
+    :root{
+      --bg:#0d0d10;
+      --panel:rgba(255,255,255,.06);
+      --panel-strong:rgba(255,255,255,.09);
+      --line:rgba(255,255,255,.12);
+      --text:#f4f1eb;
+      --muted:rgba(244,241,235,.68);
+      --accent:#d6b07a;
+      --accent-2:#f3dfbf;
+      --ok:#d9f7d9;
+      --shadow:0 24px 80px rgba(0,0,0,.38);
+      --radius:26px;
+      --radius-sm:18px;
+      --input-h:58px;
+      --max:1180px;
+    }
+
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
-        margin:0;
-        font-family:Arial, Helvetica, sans-serif;
-        background:#f5f3ef;
-        color:#1d1d1d;
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(214,176,122,.16), transparent 28%),
+        radial-gradient(circle at 90% 20%, rgba(255,255,255,.08), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(214,176,122,.10), transparent 30%),
+        linear-gradient(180deg,#111216 0%, #0b0b0e 100%);
+      min-height:100vh;
     }
+
+    .noise{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.04;
+      background-image:
+        linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+      background-size: 4px 4px, 4px 4px;
+      mix-blend-mode:soft-light;
+    }
+
     .wrap{
-        max-width:1080px;
-        margin:40px auto;
-        padding:0 20px;
+      width:min(calc(100% - 28px), var(--max));
+      margin:24px auto 40px;
     }
-    .card{
-        background:#fff;
-        border-radius:20px;
-        box-shadow:0 12px 35px rgba(0,0,0,.08);
-        overflow:hidden;
+
+    .shell{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:34px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
     }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 22px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#141414;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      letter-spacing:.08em;
+      box-shadow:0 10px 30px rgba(214,176,122,.28);
+      flex:0 0 auto;
+    }
+
+    .brand-text strong{
+      display:block;
+      font-size:14px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-text span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:12px;
+      background:rgba(255,255,255,.03);
+      white-space:nowrap;
+    }
+
     .hero{
-        padding:42px 40px 24px;
-        background:linear-gradient(180deg,#ffffff 0%, #f8f6f2 100%);
-        border-bottom:1px solid #ece7df;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:28px;
+      padding:34px;
+      border-bottom:1px solid var(--line);
     }
-    .hero h1{
-        margin:0 0 10px;
-        font-size:34px;
-        line-height:1.05;
-        letter-spacing:-0.02em;
+
+    .hero-copy h1{
+      margin:0;
+      font-size:clamp(2.1rem, 4vw, 4.4rem);
+      line-height:.95;
+      letter-spacing:-.06em;
+      max-width:9.5ch;
     }
-    .hero p{
-        margin:0;
-        color:#5d5b58;
-        line-height:1.6;
-        max-width:760px;
+
+    .hero-copy p{
+      margin:18px 0 0;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.6;
+      max-width:62ch;
     }
-    form{
-        padding:34px 40px 42px;
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:26px;
     }
+
+    .stat{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+    }
+
+    .stat strong{
+      display:block;
+      font-size:1rem;
+      margin-bottom:6px;
+    }
+
+    .stat span{
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.4;
+      display:block;
+    }
+
+    .hero-side{
+      min-height:100%;
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:20px;
+      background:
+        radial-gradient(circle at top right, rgba(214,176,122,.20), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .hero-side .label{
+      color:var(--muted);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+    }
+
+    .hero-side h2{
+      font-size:1.5rem;
+      line-height:1.1;
+      margin:8px 0 0;
+      letter-spacing:-.04em;
+    }
+
+    .mini-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .mini-item{
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: minmax(0,1fr) 350px;
+      gap:0;
+    }
+
+    .main{
+      padding:30px 34px 34px;
+      border-right:1px solid var(--line);
+    }
+
+    .aside{
+      padding:30px 24px 24px;
+      background:rgba(255,255,255,.025);
+    }
+
+    .progress{
+      position:sticky;
+      top:16px;
+      z-index:5;
+      margin-bottom:24px;
+      padding:16px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:rgba(13,13,16,.8);
+      backdrop-filter:blur(8px);
+    }
+
+    .progress-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .bar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .bar > span{
+      display:block;
+      width:0%;
+      height:100%;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      border-radius:999px;
+      transition:width .22s ease;
+    }
+
     .section{
-        margin-bottom:34px;
+      margin-bottom:30px;
     }
-    .section h2{
-        font-size:19px;
-        margin:0 0 14px;
-        padding-bottom:10px;
-        border-bottom:1px solid #ece7df;
+
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:16px;
     }
+
+    .section h3{
+      margin:0;
+      font-size:1.15rem;
+      letter-spacing:-.03em;
+    }
+
     .section-note{
-        margin:-6px 0 14px;
-        color:#6d6b67;
-        font-size:13px;
-        line-height:1.5;
+      color:var(--muted);
+      font-size:.88rem;
     }
+
     .grid{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:18px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
     }
-    .full{grid-column:1 / -1}
-    label{
-        display:block;
-        font-weight:700;
-        margin-bottom:7px;
-        font-size:14px;
+
+    .full{grid-column:1/-1}
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
     }
-    input,select,textarea{
-        width:100%;
-        border:1px solid #d8d1c8;
-        border-radius:12px;
-        padding:14px 15px;
-        font-size:15px;
-        background:#fff;
-        color:#1d1d1d;
-        outline:none;
-        transition:.18s ease;
+
+    .field label{
+      font-size:.88rem;
+      color:#fff;
     }
-    input:focus,select:focus,textarea:focus{
-        border-color:#8d7f68;
-        box-shadow:0 0 0 3px rgba(141,127,104,.12);
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      border:none;
+      outline:none;
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid transparent;
+      border-radius:18px;
+      padding:0 16px;
+      height:var(--input-h);
+      font-size:15px;
+      transition:.2s ease;
+      appearance:none;
     }
-    textarea{
-        min-height:120px;
-        resize:vertical;
+
+    .field textarea{
+      height:auto;
+      min-height:130px;
+      padding:16px;
+      resize:vertical;
     }
-    .choice-box{
-        display:grid;
-        gap:10px;
-        padding:14px;
-        border:1px solid #e0d9d0;
-        border-radius:14px;
-        background:#fbfaf8;
+
+    .field input::placeholder,
+    .field textarea::placeholder{
+      color:rgba(244,241,235,.38);
     }
-    .choice-box label{
-        font-weight:500;
-        display:flex;
-        gap:10px;
-        align-items:flex-start;
-        margin:0;
-        line-height:1.45;
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus{
+      border-color:rgba(214,176,122,.7);
+      background:rgba(255,255,255,.07);
+      box-shadow:0 0 0 4px rgba(214,176,122,.10);
     }
-    input[type="checkbox"], input[type="radio"]{
-        width:auto;
-        margin-top:3px;
-        accent-color:#111;
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
     }
+
+    .option{
+      position:relative;
+    }
+
+    .option input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .option-card{
+      min-height:130px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:12px;
+      cursor:pointer;
+      transition:.22s ease;
+    }
+
+    .option-card:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.06);
+    }
+
+    .option-card strong{
+      display:block;
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
+    .option-card span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .option-card .price{
+      color:var(--accent-2);
+      font-weight:700;
+      font-size:.98rem;
+    }
+
+    .option input:checked + .option-card{
+      border-color:rgba(214,176,122,.72);
+      background:linear-gradient(180deg, rgba(214,176,122,.14), rgba(255,255,255,.05));
+      box-shadow:0 16px 36px rgba(214,176,122,.13);
+    }
+
+    .check-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .check{
+      position:relative;
+    }
+
+    .check input{
+      position:absolute;
+      opacity:0;
+    }
+
+    .check-card{
+      min-height:84px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      padding:16px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .check-card:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.055);
+    }
+
+    .dot{
+      width:12px;
+      height:12px;
+      margin-top:4px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.22);
+      background:transparent;
+      flex:0 0 auto;
+    }
+
+    .check input:checked + .check-card{
+      border-color:rgba(214,176,122,.72);
+      background:rgba(214,176,122,.10);
+    }
+
+    .check input:checked + .check-card .dot{
+      background:var(--accent);
+      border-color:var(--accent);
+      box-shadow:0 0 0 4px rgba(214,176,122,.12);
+    }
+
+    .check-card strong{
+      display:block;
+      font-size:.96rem;
+      margin-bottom:4px;
+    }
+
+    .check-card span{
+      display:block;
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.4;
+    }
+
+    .submit-zone{
+      display:grid;
+      gap:12px;
+      margin-top:8px;
+    }
+
+    .submit{
+      width:100%;
+      min-height:64px;
+      border:none;
+      cursor:pointer;
+      border-radius:20px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#141414;
+      font-weight:800;
+      font-size:1rem;
+      letter-spacing:.01em;
+      box-shadow:0 20px 45px rgba(214,176,122,.24);
+      transition:.2s ease;
+    }
+
+    .submit:hover{transform:translateY(-2px)}
+    .submit:disabled{opacity:.75;cursor:wait}
+
+    .small-note{
+      color:var(--muted);
+      font-size:.86rem;
+      text-align:center;
+    }
+
+    .summary{
+      position:sticky;
+      top:120px;
+      display:grid;
+      gap:16px;
+    }
+
+    .summary-card{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:rgba(255,255,255,.05);
+      padding:20px;
+      overflow:hidden;
+    }
+
+    .summary-card h4{
+      margin:0 0 14px;
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
     .estimate{
-        margin-top:18px;
-        padding:20px 22px;
-        background:#111;
-        color:#fff;
-        border-radius:16px;
+      padding:22px;
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(214,176,122,.28), transparent 30%),
+        linear-gradient(180deg,#17181d,#101115);
+      border:1px solid rgba(214,176,122,.25);
+      box-shadow:0 18px 46px rgba(0,0,0,.22);
     }
-    .estimate .small{
-        display:block;
-        font-size:13px;
-        opacity:.78;
-        margin-bottom:6px;
+
+    .estimate .eyebrow{
+      color:var(--muted);
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
     }
+
     .estimate strong{
-        font-size:31px;
-        letter-spacing:-0.02em;
+      display:block;
+      margin-top:10px;
+      font-size:clamp(2rem,4vw,3rem);
+      line-height:1;
+      letter-spacing:-.06em;
     }
-    .actions{
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-        margin-top:8px;
+
+    .estimate p{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.5;
     }
-    button{
-        appearance:none;
-        border:none;
-        border-radius:14px;
-        background:#111;
-        color:#fff;
-        padding:18px 22px;
-        font-size:16px;
-        font-weight:700;
-        cursor:pointer;
-        transition:.18s ease;
+
+    .summary-list{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
     }
-    button:hover{transform:translateY(-1px)}
-    .sub{
-        color:#6b6966;
-        font-size:13px;
-        line-height:1.5;
+
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      font-size:.9rem;
+      padding:10px 0;
+      border-bottom:1px dashed rgba(255,255,255,.08);
     }
-    .hidden{display:none !important}
+
+    .summary-row:last-child{border-bottom:none;padding-bottom:0}
+    .summary-row span:first-child{color:var(--muted)}
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .chip{
+      padding:8px 11px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+      font-size:.78rem;
+    }
+
     .success{
-        padding:36px 40px 42px;
+      display:none;
+      padding:56px 30px;
+      text-align:center;
     }
+
+    .success.show{display:block}
+    .success-mark{
+      width:76px;
+      height:76px;
+      margin:0 auto 18px;
+      border-radius:24px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#141414;
+      font-size:1.8rem;
+      font-weight:900;
+      box-shadow:0 20px 48px rgba(214,176,122,.24);
+    }
+
     .success h2{
-        margin:0 0 10px;
-        font-size:28px;
+      margin:0;
+      font-size:clamp(1.8rem, 4vw, 3rem);
+      letter-spacing:-.05em;
     }
+
     .success p{
-        margin:0 0 12px;
-        line-height:1.6;
-        color:#55524f;
+      margin:14px auto 0;
+      max-width:56ch;
+      color:var(--muted);
+      line-height:1.65;
     }
-    .badge{
-        display:inline-block;
-        background:#f1ece4;
-        color:#3a3328;
-        border-radius:999px;
-        padding:8px 12px;
-        font-size:13px;
-        font-weight:700;
-        margin-bottom:16px;
+
+    .hidden{display:none!important}
+
+    @media (max-width: 1100px){
+      .hero{grid-template-columns:1fr}
+      .layout{grid-template-columns:1fr}
+      .main{border-right:none;border-bottom:1px solid var(--line)}
+      .summary,.progress{position:static}
     }
+
     @media (max-width: 760px){
-        .hero, form, .success{padding:26px 22px}
-        .grid{grid-template-columns:1fr}
-        .hero h1{font-size:28px}
+      .wrap{width:min(calc(100% - 16px), var(--max)); margin:10px auto 22px}
+      .topbar,.hero,.main,.aside{padding:18px}
+      .grid,.cards,.check-grid,.hero-stats{grid-template-columns:1fr}
+      .meta{justify-content:flex-start}
+      .shell{border-radius:24px}
+      .option-card{min-height:118px}
+      .check-card{min-height:auto}
     }
-</style>
+  </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="card">
-        <div class="hero">
-            <h1>Demande de devis — MIL</h1>
-            <p>
-                Décrivez votre événement et les prestations souhaitées.
-            </p>
-</div>
+  <div class="noise"></div>
 
-        <form id="quoteForm" action="https://formspree.io/f/xeevgogy" method="POST">
-            <input type="hidden" name="_subject" value="Nouvelle demande de devis - MIL">
-            <input type="hidden" name="_language" value="fr">
-            <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off">
-
-            <div class="section">
-                <h2>Vos coordonnées</h2>
-                <div class="grid">
-                    <div>
-                        <label for="clientType">Vous êtes</label>
-                        <select id="clientType" name="client_type" required>
-                            <option value="Particulier">Particulier</option>
-                            <option value="Entreprise">Entreprise</option>
-                        </select>
-                    </div>
-
-                    <div id="companyField" class="hidden">
-                        <label for="companyName">Nom de l’entreprise</label>
-                        <input id="companyName" type="text" name="company_name" placeholder="Nom de la société">
-                    </div>
-
-                    <div id="sirenField" class="hidden">
-                        <label for="siren">SIREN</label>
-                        <input id="siren" type="text" name="siren" placeholder="123 456 789">
-                    </div>
-
-                    <div>
-                        <label for="fullName">Nom complet</label>
-                        <input id="fullName" type="text" name="full_name" placeholder="Votre nom" required>
-                    </div>
-
-                    <div>
-                        <label for="email">Email</label>
-                        <input id="email" type="email" name="email" placeholder="vous@email.com" required>
-                    </div>
-
-                    <div>
-                        <label for="phone">Téléphone</label>
-                        <input id="phone" type="tel" name="phone" placeholder="06 00 00 00 00" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>Informations sur l’événement</h2>
-                <div class="grid">
-                    <div>
-                        <label for="eventType">Type d’événement</label>
-                        <select id="eventType" name="event_type" required>
-                            <option value="Dîner privé">Dîner privé</option>
-                            <option value="Buffet">Buffet</option>
-                            <option value="Cocktail / Vernissage">Cocktail / Vernissage</option>
-                            <option value="Pop-up">Pop-up</option>
-                            <option value="Séminaire">Séminaire</option>
-                            <option value="Anniversaire">Anniversaire</option>
-                            <option value="Mariage">Mariage</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="guests">Nombre de convives</label>
-                        <input id="guests" type="number" name="guest_count" min="1" value="20" required>
-                    </div>
-
-                    <div>
-                        <label for="eventDate">Date souhaitée</label>
-                        <input id="eventDate" type="date" name="event_date" required>
-                    </div>
-
-                    <div>
-                        <label for="eventTime">Horaires estimés</label>
-                        <input id="eventTime" type="text" name="event_time" placeholder="Ex : 18h – 23h">
-                    </div>
-
-                    <div class="full">
-                        <label for="eventLocation">Lieu de l’événement</label>
-                        <input id="eventLocation" type="text" name="event_location" placeholder="Adresse complète ou indiquez si vous souhaitez Lespace 63">
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>Prestation souhaitée</h2>
-                <p class="section-note">Sélectionnez une ou plusieurs prestations.</p>
-                <div class="choice-box">
-                    <label><input type="checkbox" name="services[]" value="Livraison buffet uniquement"> Livraison buffet uniquement</label>
-                    <label><input type="checkbox" name="services[]" value="Chef à domicile"> Chef à domicile</label>
-                    <label><input type="checkbox" name="services[]" value="Dîner servi à table"> Dîner servi à table</label>
-                    <label><input type="checkbox" name="services[]" value="Cocktail / pièces apéritives"> Cocktail / pièces apéritives</label>
-                    <label><input type="checkbox" name="services[]" value="Utilisation de Lespace 63"> Utilisation de Lespace 63</label>
-                    <label><input type="checkbox" name="services[]" value="Personnel de service"> Personnel de service</label>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>Formule MIL</h2>
-                <div class="grid">
-                    <div>
-                        <label for="formula">Choix de formule</label>
-                        <select id="formula" name="formula">
-                            <option value="0">Sur mesure</option>
-                            <option value="40">Dîner Convivial — 40 € / personne</option>
-                            <option value="110">Dîner en Galerie — 110 € / personne</option>
-                            <option value="22">Cocktail Formule 1 — 22 € / personne</option>
-                            <option value="28">Cocktail Formule 2 — 28 € / personne</option>
-                            <option value="36">Cocktail Formule 3 — 36 € / personne</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="budgetMode">Mode de budget</label>
-                        <select id="budgetMode" name="budget_mode">
-                            <option value="Budget par personne">Budget par personne</option>
-                            <option value="Budget global">Budget global</option>
-                        </select>
-                    </div>
-
-                    <div class="full">
-                        <label for="budget">Budget estimé</label>
-                        <input id="budget" type="text" name="budget" placeholder="Ex : 45 € / personne ou 1200 €">
-                    </div>
-                </div>
-
-                <div class="estimate">
-                    <span class="small">Estimation automatique selon la formule sélectionnée</span>
-                    <strong id="estimateValue">800 €</strong>
-                    <input type="hidden" name="auto_estimate" id="autoEstimateField" value="800 €">
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>Cuisine et préférences</h2>
-                <div class="grid">
-                    <div>
-                        <label for="cateringType">Type de restauration</label>
-                        <select id="cateringType" name="catering_type">
-                            <option value="Buffet froid">Buffet froid</option>
-                            <option value="Buffet chaud">Buffet chaud</option>
-                            <option value="Street food">Street food</option>
-                            <option value="Cocktail dînatoire">Cocktail dînatoire</option>
-                            <option value="Repas gastronomique">Repas gastronomique</option>
-                            <option value="Brunch">Brunch</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="culinaryStyle">Style culinaire souhaité</label>
-                        <input id="culinaryStyle" type="text" name="culinary_style" placeholder="Libanais, italien, gastronomique, végétarien…">
-                    </div>
-
-                    <div class="full">
-                        <label for="dietaryNeeds">Allergies, restrictions ou demandes particulières</label>
-                        <textarea id="dietaryNeeds" name="dietary_requirements" placeholder="Allergies, régime, besoin de menu végétarien, sans gluten, halal, etc."></textarea>
-                    </div>
-
-                    <div class="full">
-                        <label for="drinks">Boissons souhaitées</label>
-                        <textarea id="drinks" name="drinks" placeholder="Vin, cocktails, softs, champagne, pas de boissons, etc."></textarea>
-                    </div>
-
-                    <div class="full">
-                        <label for="description">Description de votre événement</label>
-                        <textarea id="description" name="event_description" placeholder="Décrivez l’ambiance, le type de convives, le déroulé, vos attentes, votre univers ou toute autre information utile."></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>Services complémentaires</h2>
-                <div class="choice-box">
-                    <label><input type="checkbox" name="extras[]" value="Mobilier / tables / mange-debout"> Mobilier / tables / mange-debout</label>
-                    <label><input type="checkbox" name="extras[]" value="Vaisselle et verrerie"> Vaisselle et verrerie</label>
-                    <label><input type="checkbox" name="extras[]" value="Décoration / scénographie"> Décoration / scénographie</label>
-                    <label><input type="checkbox" name="extras[]" value="Ménage"> Ménage</label>
-                    <label><input type="checkbox" name="extras[]" value="Régisseur"> Régisseur</label>
-                    <label><input type="checkbox" name="extras[]" value="Son / musique / vidéoprojecteur"> Son / musique / vidéoprojecteur</label>
-                </div>
-            </div>
-
-            <div class="actions">
-                <button type="submit" id="submitBtn">Envoyer ma demande de devis</button>
-          
-            </div>
-        </form>
-
-        <div id="successMessage" class="success hidden">
-            <div class="badge">Demande envoyée</div>
-            <h2>Merci, votre demande a bien été transmise.</h2>
-            <p>Nous reviendrons vers vous avec une proposition adaptée à votre événement.</p>
-            <p>Vous pouvez fermer cette page ou revenir au formulaire.</p>
-            <button type="button" id="backBtn">Revenir au formulaire</button>
+  <div class="wrap">
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">MIL</div>
+          <div class="brand-text">
+            <strong>Demande de devis</strong>
+            <span>Chef privé · Buffet · Cocktail · Lespace 63</span>
+          </div>
         </div>
+        <div class="meta">
+          <span class="pill">Réponse rapide</span>
+          <span class="pill">Devis gratuit</span>
+          <span class="pill">Paris & Île-de-France</span>
+        </div>
+      </div>
+
+      <div id="pageContent">
+        <section class="hero">
+          <div class="hero-copy">
+            <h1>Un devis clair. Un rendu premium.</h1>
+            <p>Indiquez l’essentiel. Le formulaire s’adapte à votre événement et calcule une estimation immédiate quand une formule est sélectionnée.</p>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <strong>Privé ou pro</strong>
+                <span>Dîner, cocktail, buffet, vernissage ou prestation sur mesure.</span>
+              </div>
+              <div class="stat">
+                <strong>Lieu flexible</strong>
+                <span>À domicile, en entreprise ou à Lespace 63.</span>
+              </div>
+              <div class="stat">
+                <strong>Lecture rapide</strong>
+                <span>Pas de texte inutile, seulement les bons champs.</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="hero-side">
+            <div>
+              <div class="label">Sélection rapide</div>
+              <h2>Choisissez votre format. Le reste suit.</h2>
+            </div>
+
+            <div class="mini-list">
+              <div class="mini-item">Coordonnées</div>
+              <div class="mini-item">Événement</div>
+              <div class="mini-item">Formule / budget</div>
+              <div class="mini-item">Options utiles</div>
+            </div>
+          </aside>
+        </section>
+
+        <div class="layout">
+          <main class="main">
+            <div class="progress">
+              <div class="progress-head">
+                <span>Avancement</span>
+                <span id="progressText">0%</span>
+              </div>
+              <div class="bar"><span id="progressBar"></span></div>
+            </div>
+
+            <form id="quoteForm" action="https://formspree.io/f/xeevgogy" method="POST" novalidate>
+              <input type="hidden" name="_subject" value="Nouvelle demande de devis - MIL">
+              <input type="hidden" name="_language" value="fr">
+              <input type="hidden" name="_gotcha" style="display:none">
+              <input type="hidden" name="auto_estimate" id="autoEstimate" value="Sur devis">
+
+              <section class="section">
+                <div class="section-head">
+                  <h3>Contact</h3>
+                  <div class="section-note">Essentiel uniquement</div>
+                </div>
+
+                <div class="grid">
+                  <div class="field">
+                    <label for="clientType">Vous êtes</label>
+                    <select id="clientType" name="client_type" required>
+                      <option value="">Sélectionner</option>
+                      <option value="Particulier">Particulier</option>
+                      <option value="Entreprise">Entreprise</option>
+                    </select>
+                  </div>
+
+                  <div class="field hidden" id="companyWrap">
+                    <label for="companyName">Entreprise</label>
+                    <input id="companyName" name="company_name" type="text" placeholder="Nom de la société">
+                  </div>
+
+                  <div class="field hidden" id="sirenWrap">
+                    <label for="siren">SIREN</label>
+                    <input id="siren" name="siren" type="text" inputmode="numeric" placeholder="123 456 789">
+                  </div>
+
+                  <div class="field">
+                    <label for="fullName">Nom</label>
+                    <input id="fullName" name="full_name" type="text" placeholder="Nom complet" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" placeholder="vous@email.com" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="phone">Téléphone</label>
+                    <input id="phone" name="phone" type="tel" placeholder="06 00 00 00 00" required>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-head">
+                  <h3>Événement</h3>
+                  <div class="section-note">Format, date, convives</div>
+                </div>
+
+                <div class="grid">
+                  <div class="field">
+                    <label for="eventType">Type</label>
+                    <select id="eventType" name="event_type" required>
+                      <option value="">Sélectionner</option>
+                      <option>Dîner privé</option>
+                      <option>Buffet</option>
+                      <option>Cocktail / Vernissage</option>
+                      <option>Chef à domicile</option>
+                      <option>Séminaire</option>
+                      <option>Pop-up</option>
+                      <option>Anniversaire</option>
+                      <option>Mariage</option>
+                      <option>Autre</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="guests">Convives</label>
+                    <input id="guests" name="guest_count" type="number" min="1" step="1" placeholder="20" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="eventDate">Date</label>
+                    <input id="eventDate" name="event_date" type="date" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="eventTime">Horaires</label>
+                    <input id="eventTime" name="event_time" type="text" placeholder="19h – 23h">
+                  </div>
+
+                  <div class="field full">
+                    <label for="eventLocation">Lieu</label>
+                    <input id="eventLocation" name="event_location" type="text" placeholder="Adresse complète ou Lespace 63" required>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-head">
+                  <h3>Prestation</h3>
+                  <div class="section-note">Une ou plusieurs options</div>
+                </div>
+
+                <div class="cards">
+                  <label class="option">
+                    <input type="checkbox" name="services[]" value="Chef à domicile">
+                    <span class="option-card">
+                      <span>
+                        <strong>Chef à domicile</strong>
+                        <span>Dîner privé chez vous</span>
+                      </span>
+                      <span class="price">Service premium</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="checkbox" name="services[]" value="Buffet">
+                    <span class="option-card">
+                      <span>
+                        <strong>Buffet</strong>
+                        <span>Livraison ou installation</span>
+                      </span>
+                      <span class="price">Format flexible</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="checkbox" name="services[]" value="Cocktail / Vernissage">
+                    <span class="option-card">
+                      <span>
+                        <strong>Cocktail / vernissage</strong>
+                        <span>Pièces cocktail et service</span>
+                      </span>
+                      <span class="price">Événementiel</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="checkbox" name="services[]" value="Repas servi à table">
+                    <span class="option-card">
+                      <span>
+                        <strong>Repas servi à table</strong>
+                        <span>Service assis</span>
+                      </span>
+                      <span class="price">Plus structuré</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="checkbox" name="services[]" value="Utilisation de Lespace 63">
+                    <span class="option-card">
+                      <span>
+                        <strong>Lespace 63</strong>
+                        <span>Lieu équipé à Paris</span>
+                      </span>
+                      <span class="price">Avec ou sans traiteur</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="checkbox" name="services[]" value="Personnel de service">
+                    <span class="option-card">
+                      <span>
+                        <strong>Personnel</strong>
+                        <span>Service, gestion, mise en place</span>
+                      </span>
+                      <span class="price">En complément</span>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-head">
+                  <h3>Formule</h3>
+                  <div class="section-note">Estimation automatique</div>
+                </div>
+
+                <div class="cards">
+                  <label class="option">
+                    <input type="radio" name="formula_label" value="Sur mesure" data-price="0" checked>
+                    <span class="option-card">
+                      <span>
+                        <strong>Sur mesure</strong>
+                        <span>Projet spécifique</span>
+                      </span>
+                      <span class="price">Sur devis</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="radio" name="formula_label" value="Dîner Convivial" data-price="40">
+                    <span class="option-card">
+                      <span>
+                        <strong>Dîner Convivial</strong>
+                        <span>Format simple et chaleureux</span>
+                      </span>
+                      <span class="price">40€ / pers</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="radio" name="formula_label" value="Dîner en Galerie" data-price="110">
+                    <span class="option-card">
+                      <span>
+                        <strong>Dîner en Galerie</strong>
+                        <span>Expérience premium</span>
+                      </span>
+                      <span class="price">110€ / pers</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="radio" name="formula_label" value="Cocktail Formule 1" data-price="22">
+                    <span class="option-card">
+                      <span>
+                        <strong>Cocktail 1</strong>
+                        <span>Format direct</span>
+                      </span>
+                      <span class="price">22€ / pers</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="radio" name="formula_label" value="Cocktail Formule 2" data-price="28">
+                    <span class="option-card">
+                      <span>
+                        <strong>Cocktail 2</strong>
+                        <span>Milieu de gamme</span>
+                      </span>
+                      <span class="price">28€ / pers</span>
+                    </span>
+                  </label>
+
+                  <label class="option">
+                    <input type="radio" name="formula_label" value="Cocktail Formule 3" data-price="36">
+                    <span class="option-card">
+                      <span>
+                        <strong>Cocktail 3</strong>
+                        <span>Version plus complète</span>
+                      </span>
+                      <span class="price">36€ / pers</span>
+                    </span>
+                  </label>
+                </div>
+
+                <div class="grid" style="margin-top:16px;">
+                  <div class="field">
+                    <label for="budgetMode">Budget</label>
+                    <select id="budgetMode" name="budget_mode">
+                      <option value="Budget par personne">Budget par personne</option>
+                      <option value="Budget global">Budget global</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="budget">Montant cible</label>
+                    <input id="budget" name="budget" type="text" placeholder="45€ / pers ou 1 500€">
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-head">
+                  <h3>Cuisine</h3>
+                  <div class="section-note">Préférences utiles</div>
+                </div>
+
+                <div class="grid">
+                  <div class="field">
+                    <label for="cateringType">Type de restauration</label>
+                    <select id="cateringType" name="catering_type">
+                      <option value="">Sélectionner</option>
+                      <option>Buffet froid</option>
+                      <option>Buffet chaud</option>
+                      <option>Cocktail dînatoire</option>
+                      <option>Repas gastronomique</option>
+                      <option>Street food</option>
+                      <option>Brunch</option>
+                      <option>Autre</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="culinaryStyle">Style</label>
+                    <input id="culinaryStyle" name="culinary_style" type="text" placeholder="Libanais, italien, végétarien, gastronomique">
+                  </div>
+
+                  <div class="field full">
+                    <label for="dietaryNeeds">Allergies / restrictions</label>
+                    <textarea id="dietaryNeeds" name="dietary_requirements" placeholder="Ce qui doit être évité ou intégré"></textarea>
+                  </div>
+
+                  <div class="field full">
+                    <label for="description">Brief</label>
+                    <textarea id="description" name="event_description" placeholder="Ambiance, déroulé, attentes, niveau de service"></textarea>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-head">
+                  <h3>Compléments</h3>
+                  <div class="section-note">Optionnels</div>
+                </div>
+
+                <div class="check-grid">
+                  <label class="check">
+                    <input type="checkbox" name="extras[]" value="Mobilier">
+                    <span class="check-card">
+                      <span class="dot"></span>
+                      <span><strong>Mobilier</strong><span>Tables, mange-debout, installation</span></span>
+                    </span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" name="extras[]" value="Vaisselle et verrerie">
+                    <span class="check-card">
+                      <span class="dot"></span>
+                      <span><strong>Vaisselle</strong><span>Verrerie et dressage</span></span>
+                    </span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" name="extras[]" value="Décoration / scénographie">
+                    <span class="check-card">
+                      <span class="dot"></span>
+                      <span><strong>Scénographie</strong><span>Décor et ambiance</span></span>
+                    </span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" name="extras[]" value="Ménage">
+                    <span class="check-card">
+                      <span class="dot"></span>
+                      <span><strong>Ménage</strong><span>Avant ou après événement</span></span>
+                    </span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" name="extras[]" value="Régisseur">
+                    <span class="check-card">
+                      <span class="dot"></span>
+                      <span><strong>Régisseur</strong><span>Coordination sur place</span></span>
+                    </span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" name="extras[]" value="Son / musique / vidéoprojecteur">
+                    <span class="check-card">
+                      <span class="dot"></span>
+                      <span><strong>Technique</strong><span>Son, musique, vidéoprojecteur</span></span>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
+              <div class="submit-zone">
+                <button class="submit" type="submit" id="submitBtn">Recevoir ma proposition</button>
+                <div class="small-note">Envoi direct par Formspree</div>
+              </div>
+            </form>
+          </main>
+
+          <aside class="aside">
+            <div class="summary">
+              <div class="estimate">
+                <div class="eyebrow">Estimation</div>
+                <strong id="estimateValue">Sur devis</strong>
+                <p>Indicatif. Le montant final dépend du lieu, du service et des options retenues.</p>
+              </div>
+
+              <div class="summary-card">
+                <h4>Récapitulatif</h4>
+                <div class="summary-list">
+                  <div class="summary-row">
+                    <span>Type</span>
+                    <span id="summaryEventType">—</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Convives</span>
+                    <span id="summaryGuests">—</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Lieu</span>
+                    <span id="summaryLocation">—</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Formule</span>
+                    <span id="summaryFormula">Sur mesure</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <h4>Services</h4>
+                <div class="chips" id="servicesChips">
+                  <span class="chip">Aucun service sélectionné</span>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <h4>Options</h4>
+                <div class="chips" id="extrasChips">
+                  <span class="chip">Aucune option</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <section id="successMessage" class="success">
+        <div class="success-mark">✓</div>
+        <h2>Demande envoyée.</h2>
+        <p>Votre demande a bien été transmise. Vous pouvez fermer cette page.</p>
+      </section>
     </div>
-</div>
+  </div>
 
-<script>
-const clientType = document.getElementById('clientType');
-const companyField = document.getElementById('companyField');
-const sirenField = document.getElementById('sirenField');
-const companyName = document.getElementById('companyName');
-const siren = document.getElementById('siren');
+  <script>
+    const form = document.getElementById('quoteForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMessage = document.getElementById('successMessage');
+    const pageContent = document.getElementById('pageContent');
 
-const formula = document.getElementById('formula');
-const guests = document.getElementById('guests');
-const estimateValue = document.getElementById('estimateValue');
-const autoEstimateField = document.getElementById('autoEstimateField');
+    const clientType = document.getElementById('clientType');
+    const companyWrap = document.getElementById('companyWrap');
+    const sirenWrap = document.getElementById('sirenWrap');
+    const companyName = document.getElementById('companyName');
 
-const form = document.getElementById('quoteForm');
-const submitBtn = document.getElementById('submitBtn');
-const successMessage = document.getElementById('successMessage');
-const backBtn = document.getElementById('backBtn');
+    const guests = document.getElementById('guests');
+    const eventType = document.getElementById('eventType');
+    const eventLocation = document.getElementById('eventLocation');
+    const autoEstimate = document.getElementById('autoEstimate');
+    const estimateValue = document.getElementById('estimateValue');
 
-function toggleCompanyFields() {
-    const isCompany = clientType.value === 'Entreprise';
-    companyField.classList.toggle('hidden', !isCompany);
-    sirenField.classList.toggle('hidden', !isCompany);
-    companyName.required = isCompany;
-    siren.required = false;
-}
-clientType.addEventListener('change', toggleCompanyFields);
-toggleCompanyFields();
+    const summaryEventType = document.getElementById('summaryEventType');
+    const summaryGuests = document.getElementById('summaryGuests');
+    const summaryLocation = document.getElementById('summaryLocation');
+    const summaryFormula = document.getElementById('summaryFormula');
 
-function updateEstimate() {
-    const price = parseInt(formula.value || '0', 10);
-    const people = parseInt(guests.value || '0', 10);
-    const result = price > 0 && people > 0
-        ? (price * people).toLocaleString('fr-FR') + ' €'
-        : 'Sur devis';
-    estimateValue.textContent = result;
-    autoEstimateField.value = result;
-}
-formula.addEventListener('change', updateEstimate);
-guests.addEventListener('input', updateEstimate);
-updateEstimate();
+    const servicesChips = document.getElementById('servicesChips');
+    const extrasChips = document.getElementById('extrasChips');
 
-form.addEventListener('submit', async function(e){
-    e.preventDefault();
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
 
-    if (form.action.includes('TON_ID_FORM')) {
-        alert("Le formulaire n’est pas correctement configuré.");
-        return;
+    function toggleCompanyFields() {
+      const isCompany = clientType.value === 'Entreprise';
+      companyWrap.classList.toggle('hidden', !isCompany);
+      sirenWrap.classList.toggle('hidden', !isCompany);
+      companyName.required = isCompany;
+      updateProgress();
     }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Envoi en cours...';
+    function euro(n){
+      return new Intl.NumberFormat('fr-FR').format(n) + ' €';
+    }
 
-    try {
+    function getSelectedFormula(){
+      return document.querySelector('input[name="formula_label"]:checked');
+    }
+
+    function updateEstimate(){
+      const formula = getSelectedFormula();
+      const price = parseInt(formula?.dataset.price || '0', 10);
+      const people = parseInt(guests.value || '0', 10);
+
+      const result = price > 0 && people > 0 ? euro(price * people) : 'Sur devis';
+      estimateValue.textContent = result;
+      autoEstimate.value = result;
+      summaryFormula.textContent = formula?.value || 'Sur mesure';
+    }
+
+    function renderChips(selector, values, emptyLabel){
+      selector.innerHTML = '';
+      if(!values.length){
+        selector.innerHTML = '<span class="chip">' + emptyLabel + '</span>';
+        return;
+      }
+      values.forEach(v => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = v;
+        selector.appendChild(chip);
+      });
+    }
+
+    function updateSummary(){
+      summaryEventType.textContent = eventType.value || '—';
+      summaryGuests.textContent = guests.value ? guests.value + ' pers' : '—';
+      summaryLocation.textContent = eventLocation.value || '—';
+
+      const selectedServices = [...document.querySelectorAll('input[name="services[]"]:checked')].map(el => el.value);
+      const selectedExtras = [...document.querySelectorAll('input[name="extras[]"]:checked')].map(el => el.value);
+
+      renderChips(servicesChips, selectedServices, 'Aucun service sélectionné');
+      renderChips(extrasChips, selectedExtras, 'Aucune option');
+    }
+
+    function updateProgress(){
+      const requiredFields = [...form.querySelectorAll('[required]')].filter(el => !el.closest('.hidden'));
+      const optionalSignals = [
+        document.querySelector('input[name="services[]"]:checked'),
+        document.querySelector('input[name="extras[]"]:checked'),
+        document.getElementById('culinaryStyle').value.trim(),
+        document.getElementById('description').value.trim(),
+        document.getElementById('budget').value.trim()
+      ];
+
+      let score = 0;
+      requiredFields.forEach(field => {
+        if(field.value && field.value.trim() !== '') score += 1;
+      });
+
+      optionalSignals.forEach(item => {
+        if(item) score += 1;
+      });
+
+      const total = requiredFields.length + optionalSignals.length;
+      const percent = total ? Math.round((score / total) * 100) : 0;
+
+      progressBar.style.width = percent + '%';
+      progressText.textContent = percent + '%';
+    }
+
+    function refreshAll(){
+      updateEstimate();
+      updateSummary();
+      updateProgress();
+    }
+
+    clientType.addEventListener('change', toggleCompanyFields);
+    guests.addEventListener('input', refreshAll);
+    eventType.addEventListener('change', refreshAll);
+    eventLocation.addEventListener('input', refreshAll);
+
+    form.querySelectorAll('input[name="formula_label"]').forEach(el => {
+      el.addEventListener('change', refreshAll);
+    });
+
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('input', refreshAll);
+      el.addEventListener('change', refreshAll);
+    });
+
+    toggleCompanyFields();
+    refreshAll();
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi...';
+
+      try {
         const response = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: {
-                'Accept': 'application/json'
-            }
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
         });
 
-        if (response.ok) {
-            form.classList.add('hidden');
-            successMessage.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        if(response.ok){
+          pageContent.classList.add('hidden');
+          successMessage.classList.add('show');
+          window.scrollTo({ top:0, behavior:'smooth' });
         } else {
-            alert("Erreur d’envoi. Vérifie l’endpoint Formspree ou réessaie.");
+          alert("Erreur d’envoi.");
         }
-    } catch (error) {
-        alert("Erreur réseau. Réessaie.");
-    } finally {
+      } catch (error) {
+        alert("Erreur réseau.");
+      } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Envoyer ma demande de devis';
-    }
-});
-
-backBtn.addEventListener('click', function(){
-    successMessage.classList.add('hidden');
-    form.classList.remove('hidden');
-});
-</script>
+        submitBtn.textContent = 'Recevoir ma proposition';
+      }
+    });
+  </script>
 </body>
 </html>
